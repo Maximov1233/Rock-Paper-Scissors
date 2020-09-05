@@ -5,11 +5,26 @@ const options = document.querySelectorAll('.option'),
     computerScore = document.querySelector('.computer-score'),
     optionsArr = Array.from(options);
 
+let input = document.querySelector('#fun');
+
 const win = (winner) => {
     if (winner === 'player') {
         playerScore.textContent = parseInt(playerScore.textContent) + 1;
     } else {
         computerScore.textContent = parseInt(computerScore.textContent) + 1;
+    }
+};
+
+const computerAlwaysWins = (option) => {
+    switch (option) {
+        case 'rock':
+            return 0;
+        
+        case 'paper': 
+            return 2;
+        
+        case 'scissors':
+            return 0;
     }
 };
 
@@ -67,9 +82,22 @@ const judjing = (playerOption, computerOption) => {
 
 options.forEach((option) => {
     option.addEventListener('click', () => {
-        computerOptionDiv.innerHTML = '';
-        let computerOption = optionsArr[Math.floor(Math.random() * 3)].cloneNode(true);
-        computerOptionDiv.append(computerOption);
-        judjing(option, computerOption);
+        if (input.hasAttribute('disabled')) {
+            computerOptionDiv.innerHTML = '';
+            let computerOption = optionsArr[computerAlwaysWins(option.dataset.option)].cloneNode(true);
+            computerOptionDiv.append(computerOption);
+            judjing(option, computerOption);
+        } else {
+            input.setAttribute('disabled', true);
+            computerOptionDiv.innerHTML = '';
+            let computerOption = optionsArr[Math.floor(Math.random() * 3)].cloneNode(true);
+            computerOptionDiv.append(computerOption);
+            judjing(option, computerOption);
+        }
+        
     });
 });
+
+input.addEventListener('click', () => {
+    input.setAttribute('disabled', true);
+})
